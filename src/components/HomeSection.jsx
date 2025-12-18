@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import curisity from "../images/curiosity.png"
+import discovery from "../images/discovery.png"
+import image from "../images/image.png"
+import imagination from "../images/imagination.png"
+import playlearn from "../images/playlearn.png"
 import teddy from "../images/teddy.png"
 import {
     EffectCoverflow,
@@ -61,27 +65,27 @@ export default function HeroSection() {
         {
             title: "Bedtime Story Magic",
             desc: "Nomo tells soft, comforting stories that help kids sleep peacefully.",
-            url: curisity,
+            url: image,
         },
         {
             title: "Curiosity Explorer",
             desc: "Every question becomes a fun adventure of learning and wonder.",
-            url: "/nomotoyz-images/curiosity.png",
+            url: curisity,
         },
         {
             title: "Play & Learn Moments",
             desc: "Interactive play that secretly boosts learning and creativity.",
-            url: "/nomotoyz-images/playlearn.png",
+            url: playlearn,
         },
         {
             title: "Imagination World",
             desc: "Nomo brings characters to life with expressive storytelling.",
-            url: "/nomotoyz-images/imagination.png",
+            url: imagination,
         },
         {
             title: "Discovery Time",
             desc: "Kids learn real facts in story format they actually enjoy.",
-            url: "/nomotoyz-images/discovery.png",
+            url: discovery,
         },
     ];
 
@@ -166,7 +170,7 @@ export default function HeroSection() {
                 </div>
 
                 {/* RIGHT — PARALLAX SLIDER */}
-                <div className="w-full">
+                <div className="w-full h-[32rem]">
                     <Swiper
                         effect="coverflow"
                         grabCursor
@@ -192,12 +196,12 @@ export default function HeroSection() {
                             1024: { slidesPerView: 1.7 },
                             1560: { slidesPerView: 2 },
                         }}
-                        className="w-full"
+                        className="w-full h-full"
                     >
                         {slides.map((slide, index) => (
                             <SwiperSlide
                                 key={index}
-                                className="w-72 h-[28rem] rounded-xl overflow-hidden bg-cover bg-center flex flex-col justify-end relative group"
+                                className="w-72 h-full rounded-xl overflow-hidden bg-cover bg-center flex flex-col justify-end relative group"
                                 style={{
                                     backgroundImage: `
                     linear-gradient(to top, rgba(0,0,0,0.75), transparent),

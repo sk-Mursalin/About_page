@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Sparkles, Brain, ShieldCheck, Rocket, Smile, Puzzle, Star } from "lucide-react";
 import HeroSection from "../components/HomeSection";
+import image from "../images/image.png"
 
 const fadeUp = {
   hidden: { opacity: 0, y: 50 },
@@ -9,7 +10,7 @@ const fadeUp = {
 
 export default function HomePage() {
   return (
-    <div className="w-full overflow-hidden font-sans text-gray-800">
+    <div className="w-full  font-sans text-gray-800">
 
 
       <HeroSection />
@@ -33,7 +34,9 @@ export default function HomePage() {
               whileHover={{ y: -12, rotate: 1 }}
               className="bg-white rounded-3xl p-6 shadow-[0_25px_50px_rgba(124,58,237,0.3)]"
             >
-              <div className="h-36 bg-gradient-to-br from-pink-200 to-purple-200 rounded-2xl mb-5" />
+              <div className="h-36 bg-gradient-to-br from-pink-200 to-purple-200 rounded-2xl mb-5">
+                <img className="h-full w-full rounded-md" src={image} alt="" />
+              </div>
               <p className="font-bold text-purple-700">AI Buddy Toy</p>
               <p className="text-sm text-gray-500">Smarter every playtime </p>
             </motion.div>
@@ -112,6 +115,8 @@ export default function HomePage() {
           </div>
         </motion.div>
       </section>
+
+
 
       <footer className="bg-purple-800 text-white py-14">
         <div className="max-w-7xl mx-auto px-6 text-center">
