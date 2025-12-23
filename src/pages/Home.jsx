@@ -147,7 +147,7 @@ import toyImage from "../images/teddy.png"
 import playlearn from "../images/playlearn.png"
 export default function HomePage() {
   return (
-    <div className="bg-gradient-to-b from-indigo-50 via-pink-50 to-yellow-50">
+    <div className="bg-gradient-to-b from-indigo-50 via-violet-50 to-white">
 
       {/* HERO SECTION */}
       <section className="min-h-screen flex items-center px-6 md:px-16">
@@ -161,7 +161,7 @@ export default function HomePage() {
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
               A Smart AI Toy That{" "}
               <span className="text-indigo-600">Talks</span>,{" "}
-              <span className="text-pink-600">Learns</span> & Grows With Your Child
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">Learns</span> & Grows With Your Child
             </h1>
 
             <p className="mt-6 text-lg text-gray-600">
@@ -360,6 +360,7 @@ function Feature({ icon, title, desc }) {
 function Benefit({ icon, title, desc }) {
   return (
     <motion.div
+      whileHover={{ y: -8 }}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
