@@ -146,11 +146,12 @@ import { Mic, ShieldCheck, Sparkles, BookOpen, Brain, Leaf, MessageCircle, Palet
 import toyImage from "../images/teddy.png"
 import playlearn from "../images/playlearn.png"
 export default function HomePage() {
+
   return (
     <div className="bg-gradient-to-b from-indigo-50 via-violet-50 to-white">
 
       {/* HERO SECTION */}
-      <section className="min-h-screen flex items-center px-6 md:px-16">
+      {/* <section className="min-h-screen flex items-center px-6 md:px-16">
         <div className="grid md:grid-cols-2 gap-10 items-center">
 
           <motion.div
@@ -174,17 +175,7 @@ export default function HomePage() {
               <Button variant="outline">See Demo</Button>
             </div>
           </motion.div>
-          {/* 
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-center"
-          >
-            <div className="w-72 h-72 rounded-full bg-gradient-to-br from-indigo-300 to-pink-300 shadow-2xl flex items-center justify-center text-5xl">
-              <img className="w-full h-full rounded-full  " src={playlearn} alt="" />
-            </div>
-          </motion.div> */}
+         
           <motion.div
             initial={{ scale: 0.85, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -196,8 +187,129 @@ export default function HomePage() {
 
 
         </div>
-      </section>
+      </section> */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Video */}
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/70 via-violet-900/60 to-purple-900/70" />
+        </div>
 
+        {/* Content */}
+        <div className="relative z-10 text-center px-6 md:px-16 max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.h1
+              className="text-5xl md:text-7xl font-bold leading-tight text-white"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              A Smart AI Toy That{" "}
+              <motion.span
+                className="text-yellow-300"
+                animate={{
+                  textShadow: [
+                    "0 0 20px rgba(253, 224, 71, 0.5)",
+                    "0 0 40px rgba(253, 224, 71, 0.8)",
+                    "0 0 20px rgba(253, 224, 71, 0.5)"
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                Talks
+              </motion.span>,{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-300 to-purple-300">Learns</span> & Grows With Your Child
+            </motion.h1>
+
+            <motion.p
+              className="mt-6 text-xl text-gray-200 max-w-2xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              A playful AI companion for learning, fun, and safety — fully
+              controlled by parents.
+            </motion.p>
+
+            <motion.div
+              className="mt-10 flex gap-4 justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <Button>Order Now</Button>
+              <Button variant="outline">See Demo</Button>
+            </motion.div>
+          </motion.div>
+
+          {/* Floating 3D Elements */}
+          <div className="absolute inset-0 pointer-events-none">
+            <motion.div
+              className="absolute top-20 left-10 w-20 h-20 bg-yellow-300/20 rounded-full blur-xl"
+              animate={{
+                y: [0, -30, 0],
+                x: [0, 20, 0],
+                scale: [1, 1.2, 1]
+              }}
+              transition={{ duration: 4, repeat: Infinity }}
+            />
+            <motion.div
+              className="absolute top-40 right-20 w-32 h-32 bg-pink-300/20 rounded-full blur-xl"
+              animate={{
+                y: [0, 40, 0],
+                x: [0, -20, 0],
+                scale: [1, 1.3, 1]
+              }}
+              transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+            />
+            <motion.div
+              className="absolute bottom-40 left-1/4 w-24 h-24 bg-purple-300/20 rounded-full blur-xl"
+              animate={{
+                y: [0, -20, 0],
+                x: [0, 30, 0],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{ duration: 6, repeat: Infinity, delay: 2 }}
+            />
+            <motion.div
+              className="absolute bottom-20 right-1/3 w-16 h-16 bg-indigo-300/20 rounded-full blur-xl"
+              animate={{
+                y: [0, 25, 0],
+                x: [0, -15, 0],
+                scale: [1, 1.4, 1]
+              }}
+              transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
+            />
+          </div>
+
+          {/* Scroll Indicator */}
+          <motion.div
+            className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2">
+              <motion.div
+                className="w-1.5 h-1.5 bg-white rounded-full"
+                animate={{ y: [0, 12, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+            </div>
+          </motion.div>
+        </div>
+      </section>
       {/* PRODUCT SECTION */}
       <section className="py-24 px-6 md:px-16">
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -334,10 +446,6 @@ export default function HomePage() {
           />
         </div>
       </section>
-
-
-
-
     </div>
   );
 }
