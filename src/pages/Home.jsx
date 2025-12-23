@@ -144,6 +144,7 @@ import { motion } from "framer-motion";
 import Button from "../components/Button";
 import { Mic, ShieldCheck, Sparkles, BookOpen, Brain, Leaf, MessageCircle, Palette, Heart } from "lucide-react";
 import toyImage from "../images/teddy.png"
+import playlearn from "../images/playlearn.png"
 export default function HomePage() {
   return (
     <div className="bg-gradient-to-b from-indigo-50 via-pink-50 to-yellow-50">
@@ -173,7 +174,7 @@ export default function HomePage() {
               <Button variant="outline">See Demo</Button>
             </div>
           </motion.div>
-
+          {/* 
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -181,9 +182,18 @@ export default function HomePage() {
             className="flex justify-center"
           >
             <div className="w-72 h-72 rounded-full bg-gradient-to-br from-indigo-300 to-pink-300 shadow-2xl flex items-center justify-center text-5xl">
-              🤖
+              <img className="w-full h-full rounded-full  " src={playlearn} alt="" />
             </div>
+          </motion.div> */}
+          <motion.div
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="flex justify-center"
+          >
+            <OfferProductCard />
           </motion.div>
+
 
         </div>
       </section>
@@ -285,6 +295,47 @@ export default function HomePage() {
           />
         </div>
       </section>
+      {/* TESTIMONIALS SECTION */}
+      <section className="py-28 px-6 md:px-16 bg-gradient-to-b from-indigo-50 via-pink-50 to-white">
+        <div>
+          <h2 className="text-4xl font-bold text-center mb-6">
+            Loved by Parents
+          </h2>
+
+        </div>
+
+        <p className="text-center text-gray-600 max-w-2xl mx-auto mb-16">
+          Trusted by parents and loved by kids — real experiences from our early users.
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          <TestimonialCard
+            name="Ananya Sharma"
+            role="Mother of 6-year-old"
+            image="https://i.pravatar.cc/150?img=32"
+            rating={5}
+            review="My son talks to RoboBuddy every day. His confidence and speaking skills have improved so much!"
+          />
+
+          <TestimonialCard
+            name="Rahul Verma"
+            role="Father of 5-year-old"
+            image="https://i.pravatar.cc/150?img=12"
+            rating={5}
+            review="The parent controls give us peace of mind. Educational, safe, and incredibly engaging."
+          />
+
+          <TestimonialCard
+            name="Sneha Gupta"
+            role="Parent"
+            image="https://i.pravatar.cc/150?img=47"
+            rating={4}
+            review="Stories, quizzes, and friendly conversations — RoboBuddy feels like a real companion."
+          />
+        </div>
+      </section>
+
+
 
 
     </div>
@@ -324,3 +375,90 @@ function Benefit({ icon, title, desc }) {
   );
 }
 
+
+
+import { Star } from "lucide-react";
+
+function TestimonialCard({ name, role, image, rating, review }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ y: -8 }}
+      className="relative bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white"
+    >
+      {/* Customer Image */}
+      <div className="flex justify-center -mt-14">
+        <img
+          src={image}
+          alt={name}
+          className="w-24 h-24 rounded-full border-4 border-white shadow-lg"
+        />
+      </div>
+
+      {/* Stars */}
+      <div className="flex justify-center mt-4 mb-3">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Star
+            key={i}
+            className={`w-5 h-5 ${i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+              }`}
+          />
+        ))}
+      </div>
+
+      {/* Review */}
+      <p className="text-gray-700 text-center italic">
+        “{review}”
+      </p>
+
+      {/* Name */}
+      <div className="mt-6 text-center">
+        <h4 className="font-semibold">{name}</h4>
+        <p className="text-sm text-gray-500">{role}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+function OfferProductCard() {
+  return (
+    <motion.div
+      whileHover={{ y: -6 }}
+      className="relative w-80 bg-white rounded-3xl shadow-2xl p-6"
+    >
+      {/* Offer Badge */}
+      <div className="absolute -top-4 -right-4 bg-pink-500 text-white text-sm font-semibold px-4 py-1 rounded-full shadow-lg">
+        30% OFF
+      </div>
+
+      {/* Product Image */}
+      <div className="h-56 bg-gradient-to-br from-indigo-100 to-pink-100 rounded-2xl flex items-center justify-center">
+        <img
+          src={playlearn}
+          alt="RoboBuddy"
+          className="w-44"
+        />
+      </div>
+
+      {/* Product Info */}
+      <div className="mt-5 text-center">
+        <h3 className="text-xl font-semibold">RoboBuddy AI Toy</h3>
+
+        <div className="mt-2 flex justify-center items-center gap-3">
+          <span className="text-gray-400 line-through text-lg">₹4,999</span>
+          <span className="text-2xl font-bold text-indigo-600">₹3,499</span>
+        </div>
+
+        <p className="mt-2 text-sm text-gray-500">
+          Limited-time launch offer
+        </p>
+
+        <Button className="mt-4 w-full">
+          Grab Offer
+        </Button>
+      </div>
+    </motion.div>
+  );
+}
