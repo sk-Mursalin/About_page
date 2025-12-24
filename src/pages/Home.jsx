@@ -574,8 +574,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Mic, ShieldCheck, Sparkles, BookOpen, Brain, Leaf, MessageCircle, Palette, Heart, Star } from 'lucide-react';
+import toy from "../images/toy.png"
 
 export default function HomePage() {
+  const [currentLang, setCurrentLang] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
   const canvasRef = useRef(null);
   const [scrollY, setScrollY] = useState(0);
 
@@ -584,6 +588,35 @@ export default function HomePage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const languages = [
+    { text: 'Hindi', lang: 'Hindi' },
+    { text: 'Tamil', lang: 'Tamil' },
+    { text: 'Bengali', lang: 'Bengali' }
+  ];
+
+  useEffect(() => {
+    const currentText = languages[currentLang].text;
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayText.length < currentText.length) {
+          setDisplayText(currentText.slice(0, displayText.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        if (displayText.length > 0) {
+          setDisplayText(displayText.slice(0, -1));
+        } else {
+          setIsDeleting(false);
+          setCurrentLang((prev) => (prev + 1) % languages.length);
+        }
+      }
+    }, isDeleting ? 50 : 100);
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, currentLang]);
+
 
   useEffect(() => {
     const observerOptions = {
@@ -701,7 +734,7 @@ export default function HomePage() {
         .scroll-animate-delay-3 { transition-delay: 0.3s; }
         .scroll-animate-delay-4 { transition-delay: 0.4s; }
       `}</style>
-      
+
       {/* 3D Canvas Background */}
       <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-0" />
 
@@ -712,9 +745,9 @@ export default function HomePage() {
             <h1 className="text-3xl md:text-7xl font-black mb-6 leading-tight">
               A Smart AI Toy That{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-pulse">
-                Talks
+                Talks {displayText}
               </span>
-              ,{" "}
+              ,{" "}<br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
                 Learns
               </span>{" "}
@@ -754,7 +787,7 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
               <div className="relative bg-gradient-to-br from-slate-900/80 to-purple-900/80 backdrop-blur-xl p-12 rounded-3xl border border-purple-500/30 transform transition-all duration-500 hover:scale-105 hover:rotate-1">
                 <div className="w-full h-96 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-2xl flex items-center justify-center text-9xl transform transition-transform duration-500 group-hover:scale-110">
-                  🤖
+                  <img className='w-full h-full rounded-md' src={toy} alt="" />
                 </div>
               </div>
             </div>
@@ -770,10 +803,10 @@ export default function HomePage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <Feature3D icon={<Mic/>} text="Responds like a real friend "/>
-                <Feature3D icon={<ShieldCheck/>} text="Monitor and manage safely." />
-                <Feature3D icon={<Sparkles/>} text="Learns and adapts to your child." />
-                <Feature3D icon={<BookOpen/>} text="Stories, quizzes, and fun learning." />
+                <Feature3D icon={<Mic />} text="Responds like a real friend " />
+                <Feature3D icon={<ShieldCheck />} text="Monitor and manage safely." />
+                <Feature3D icon={<Sparkles />} text="Learns and adapts to your child." />
+                <Feature3D icon={<BookOpen />} text="Stories, quizzes, and fun learning." />
               </div>
 
               <button className="group relative px-10 py-5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-xl font-bold overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-pink-500/50">
@@ -812,7 +845,7 @@ export default function HomePage() {
       {/* BENEFITS SECTION */}
       <section className="relative py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-5xl md:text-6xl font-black text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 scroll-animate">
+          <h2 className="text-5xl md:text-6xl font-black text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 scroll-animate">
             Benefits for Your Child
           </h2>
 
@@ -889,9 +922,9 @@ function Feature3D({ icon, text }) {
 
 function FeatureCard({ icon, title, desc }) {
   return (
-    <div className="group relative">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
-      <div className="relative bg-gradient-to-br from-slate-900/80 to-purple-900/80 backdrop-blur-xl p-8 rounded-2xl border border-purple-500/30 transform transition-all duration-500 hover:scale-105 hover:-translate-y-4">
+    <div className="group relative h-[218px]">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 "></div>
+      <div className="relative h-full bg-gradient-to-br from-slate-900/80 to-purple-900/80 backdrop-blur-xl p-8 rounded-2xl border border-purple-500/30 transform transition-all duration-500 hover:scale-105 hover:-translate-y-4">
         <div className="text-purple-400 mb-4 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
           {icon}
         </div>
@@ -904,9 +937,9 @@ function FeatureCard({ icon, title, desc }) {
 
 function BenefitCard({ icon, title, desc }) {
   return (
-    <div className="group relative">
+    <div className="group relative h-[250px]">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
-      <div className="relative bg-gradient-to-br from-slate-900/80 to-pink-900/80 backdrop-blur-xl p-8 rounded-2xl border border-pink-500/30 transform transition-all duration-500 hover:scale-105 hover:-translate-y-4">
+      <div className="relative h-full bg-gradient-to-br from-slate-900/80 to-pink-900/80 backdrop-blur-xl p-8 rounded-2xl border border-pink-500/30 transform transition-all duration-500 hover:scale-105 hover:-translate-y-4">
         <div className="text-pink-400 mb-4 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
           {icon}
         </div>
@@ -919,9 +952,9 @@ function BenefitCard({ icon, title, desc }) {
 
 function TestimonialCard({ name, role, rating, review }) {
   return (
-    <div className="group relative">
+    <div className="group relative h-[252px]">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
-      <div className="relative bg-gradient-to-br from-slate-900/80 to-purple-900/80 backdrop-blur-xl p-8 rounded-2xl border border-purple-500/30 transform transition-all duration-500 hover:scale-105">
+      <div className="relative h-full bg-gradient-to-br from-slate-900/80 to-purple-900/80 backdrop-blur-xl p-8 rounded-2xl border border-purple-500/30 transform transition-all duration-500 hover:scale-105">
         <div className="flex items-center gap-2 mb-4">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star key={i} size={20} className="fill-yellow-400 text-yellow-400" />
@@ -932,7 +965,7 @@ function TestimonialCard({ name, role, rating, review }) {
 
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-2xl">
-            👤
+            <img src="https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png" alt="" />
           </div>
           <div>
             <p className="font-bold text-white">{name}</p>
