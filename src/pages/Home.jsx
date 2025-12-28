@@ -574,7 +574,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Mic, ShieldCheck, Sparkles, BookOpen, Brain, Leaf, MessageCircle, Palette, Heart, Star } from 'lucide-react';
-import toy from "../images/toy.png"
 
 export default function HomePage() {
   const [currentLang, setCurrentLang] = useState(0);
@@ -617,7 +616,6 @@ export default function HomePage() {
     return () => clearTimeout(timeout);
   }, [displayText, isDeleting, currentLang]);
 
-
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -650,14 +648,13 @@ export default function HomePage() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.position.z = 5;
 
-    // Create floating 3D shapes
     const geometry1 = new THREE.IcosahedronGeometry(1, 0);
     const geometry2 = new THREE.TorusGeometry(0.7, 0.3, 16, 100);
     const geometry3 = new THREE.OctahedronGeometry(0.8);
 
-    const material1 = new THREE.MeshPhongMaterial({ color: 0x6366f1, wireframe: true });
-    const material2 = new THREE.MeshPhongMaterial({ color: 0x8b5cf6, wireframe: true });
-    const material3 = new THREE.MeshPhongMaterial({ color: 0xec4899, wireframe: true });
+    const material1 = new THREE.MeshPhongMaterial({ color: 0xFF9933, wireframe: true });
+    const material2 = new THREE.MeshPhongMaterial({ color: 0x303F9F, wireframe: true });
+    const material3 = new THREE.MeshPhongMaterial({ color: 0xFFD700, wireframe: true });
 
     const mesh1 = new THREE.Mesh(geometry1, material1);
     const mesh2 = new THREE.Mesh(geometry2, material2);
@@ -669,7 +666,6 @@ export default function HomePage() {
 
     scene.add(mesh1, mesh2, mesh3);
 
-    // Lighting
     const light1 = new THREE.DirectionalLight(0xffffff, 1);
     light1.position.set(5, 5, 5);
     scene.add(light1);
@@ -677,7 +673,6 @@ export default function HomePage() {
     const light2 = new THREE.AmbientLight(0x404040, 2);
     scene.add(light2);
 
-    // Animation
     let animationId;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
@@ -691,7 +686,6 @@ export default function HomePage() {
       mesh3.rotation.x += 0.007;
       mesh3.rotation.y += 0.005;
 
-      // Parallax effect based on scroll
       const scrollFactor = scrollY * 0.001;
       mesh1.position.y = 2 - scrollFactor;
       mesh2.position.y = -1 + scrollFactor * 0.5;
@@ -718,7 +712,7 @@ export default function HomePage() {
   }, [scrollY]);
 
   return (
-    <div className="relative bg-gradient-to-b from-slate-950 via-purple-950 to-slate-950 text-white overflow-x-hidden">
+    <div className="relative bg-gradient-to-b from-amber-50 via-orange-50 to-yellow-50 text-gray-900 overflow-x-hidden">
       <style>{`
         .scroll-animate {
           opacity: 0;
@@ -733,85 +727,93 @@ export default function HomePage() {
         .scroll-animate-delay-2 { transition-delay: 0.2s; }
         .scroll-animate-delay-3 { transition-delay: 0.3s; }
         .scroll-animate-delay-4 { transition-delay: 0.4s; }
+        
+        .marigold-orange { color: #FF9933; }
+        .royal-indigo { color: #303F9F; }
+        .turmeric-yellow { color: #FFD700; }
+        .bg-marigold { background-color: #FF9933; }
+        .bg-indigo { background-color: #303F9F; }
+        .bg-turmeric { background-color: #FFD700; }
+        .border-marigold { border-color: #FF9933; }
+        .border-indigo { border-color: #303F9F; }
+        .border-turmeric { border-color: #FFD700; }
       `}</style>
 
-      {/* 3D Canvas Background */}
-      <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-0" />
-
+      <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-30" />
+      
       {/* HERO SECTION */}
       <section className="relative min-h-screen flex items-center justify-center px-6 py-20">
         <div className="max-w-7xl mx-auto text-center z-10">
           <div className="transform transition-transform duration-700 hover:scale-105">
-            <h1 className="text-3xl md:text-7xl font-black mb-6 leading-tight">
+            <h1 className="text-3xl md:text-7xl font-black mb-6 leading-tight text-gray-900">
               A Smart AI Toy That{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-pulse">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9933] via-[#FFD700] to-[#FF9933] animate-pulse">
                 Talks {displayText}
               </span>
-              ,{" "}<br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
+              ,{" "}<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#303F9F] via-[#5C6BC0] to-[#303F9F]">
                 Learns
               </span>{" "}
               & Grows With Your Child
             </h1>
           </div>
 
-          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto transform transition-all duration-500 hover:text-white">
+          <p className="text-xl md:text-2xl text-gray-700 mb-12 max-w-3xl mx-auto transform transition-all duration-500 hover:text-gray-900">
             A playful AI companion for learning, fun, and safety — fully controlled by parents.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <button className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-lg font-bold overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-purple-500/50">
+            <button className="group relative px-8 py-4 rounded-full text-lg font-bold text-white overflow-hidden transform transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-2xl bg-turmeric">
               <span className="relative z-10">Order Now</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FFD700] to-[#FFA500] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
 
-            <button className="px-8 py-4 border-2 border-purple-400 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-110 hover:bg-purple-400/10 hover:shadow-lg hover:shadow-purple-400/50">
+            <button className="px-8 py-4 border-2 rounded-full text-lg font-bold transform transition-all duration-300 hover:scale-110 shadow-lg border-marigold marigold-orange hover:bg-orange-50">
               See Demo
             </button>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-purple-400 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-purple-400 rounded-full mt-2 animate-pulse"></div>
+          <div className="w-6 h-10 border-2 rounded-full flex justify-center border-marigold">
+            <div className="w-1 h-3 rounded-full mt-2 animate-pulse bg-marigold"></div>
           </div>
         </div>
       </section>
 
       {/* PRODUCT SECTION */}
-      <section className="relative py-20 px-6">
+      <section className="relative py-20 px-6" style={{ backgroundColor: '#FAF9F6' }}>
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="relative group scroll-animate">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-              <div className="relative bg-gradient-to-br from-slate-900/80 to-purple-900/80 backdrop-blur-xl p-12 rounded-3xl border border-purple-500/30 transform transition-all duration-500 hover:scale-105 hover:rotate-1">
-                <div className="w-full h-96 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-2xl flex items-center justify-center text-9xl transform transition-transform duration-500 group-hover:scale-110">
-                  <img className='w-full h-full rounded-md' src={toy} alt="" />
+              <div className="absolute inset-0 rounded-3xl blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#FF9933] to-[#FFD700]"></div>
+              <div className="relative backdrop-blur-xl p-12 rounded-3xl border-2 shadow-2xl transform transition-all duration-500 hover:scale-105 hover:rotate-1 bg-white border-indigo">
+                <div className="w-full h-96 rounded-2xl flex items-center justify-center text-9xl transform transition-transform duration-500 group-hover:scale-110 bg-gradient-to-br from-orange-50 to-yellow-50">
+                  🤖
                 </div>
               </div>
             </div>
 
             <div className="space-y-8 scroll-animate scroll-animate-delay-2">
               <div className="transform transition-all duration-500 hover:translate-x-4">
-                <h2 className="text-5xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                <h2 className="text-5xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#FF9933] to-[#303F9F]">
                   RoboBuddy
                 </h2>
-                <p className="text-xl text-gray-300 leading-relaxed">
+                <p className="text-xl text-gray-700 leading-relaxed">
                   An AI-powered toy that talks, tells stories, answers questions, and adapts to your child's learning journey.
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <Feature3D icon={<Mic />} text="Responds like a real friend " />
-                <Feature3D icon={<ShieldCheck />} text="Monitor and manage safely." />
-                <Feature3D icon={<Sparkles />} text="Learns and adapts to your child." />
-                <Feature3D icon={<BookOpen />} text="Stories, quizzes, and fun learning." />
+                <Feature3D icon={<Mic />} text="Responds like a real friend" />
+                <Feature3D icon={<ShieldCheck />} text="Monitor and manage safely" />
+                <Feature3D icon={<Sparkles />} text="Learns and adapts to your child" />
+                <Feature3D icon={<BookOpen />} text="Stories, quizzes, and fun learning" />
               </div>
 
-              <button className="group relative px-10 py-5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-xl font-bold overflow-hidden transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-pink-500/50">
+              <button className="group relative px-10 py-5 rounded-full text-xl font-bold text-white overflow-hidden transform transition-all duration-300 hover:scale-110 shadow-xl hover:shadow-2xl bg-turmeric">
                 <span className="relative z-10">Order Now</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#FFD700] to-[#FFA500] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </div>
           </div>
@@ -821,7 +823,7 @@ export default function HomePage() {
       {/* FEATURES SECTION */}
       <section className="relative py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-5xl md:text-6xl font-black text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 scroll-animate">
+          <h2 className="text-5xl md:text-6xl font-black text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-[#FF9933] via-[#303F9F] to-[#FFD700] scroll-animate">
             Powerful Features
           </h2>
 
@@ -843,9 +845,9 @@ export default function HomePage() {
       </section>
 
       {/* BENEFITS SECTION */}
-      <section className="relative py-20 px-6">
+      <section className="relative py-20 px-6" style={{ backgroundColor: '#FAF9F6' }}>
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-5xl md:text-6xl font-black text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 scroll-animate">
+          <h2 className="text-5xl md:text-6xl font-black text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-[#303F9F] via-[#FF9933] to-[#FFD700] scroll-animate">
             Benefits for Your Child
           </h2>
 
@@ -870,10 +872,10 @@ export default function HomePage() {
       <section className="relative py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 scroll-animate">
-            <h2 className="text-5xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+            <h2 className="text-5xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#FF9933] via-[#303F9F] to-[#FFD700]">
               Loved by Parents
             </h2>
-            <p className="text-xl text-gray-300">Trusted by parents and loved by kids — real experiences from our early users.</p>
+            <p className="text-xl text-gray-700">Trusted by parents and loved by kids — real experiences from our early users.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -904,6 +906,57 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <footer className="relative py-16 px-6" style={{ backgroundColor: '#FAF9F6' }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div className="space-y-4">
+              <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FF9933] to-[#FFD700]">
+                Nomo Toyz
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                Making learning fun, emotional, and screen-free for kids.
+              </p>
+              <p className="text-gray-800 font-semibold">hello@nomotoyz.com</p>
+            </div>
+
+            <div>
+              <h4 className="text-xl font-bold mb-4 royal-indigo">Quick Links</h4>
+              <ul className="space-y-3">
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Home</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Features</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Benefits</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">About</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xl font-bold mb-4 royal-indigo">Support</h4>
+              <ul className="space-y-3">
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">FAQ</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Parent Guide</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Privacy Policy</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Terms of Service</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xl font-bold mb-4 royal-indigo">Connect</h4>
+              <ul className="space-y-3">
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Instagram</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Facebook</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">Twitter</li>
+                <li className="text-gray-700 hover:text-[#FF9933] cursor-pointer transform transition-all duration-300 hover:translate-x-2">YouTube</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t-2 border-[#FF9933] text-center">
+            <p className="text-gray-600">
+              © 2025 Nomo Toyz. All rights reserved. Made with <Heart size={16} className="inline text-red-500 fill-red-500" /> for kids everywhere.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -911,10 +964,10 @@ export default function HomePage() {
 function Feature3D({ icon, text }) {
   return (
     <div className="group relative">
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
-      <div className="relative bg-slate-900/50 backdrop-blur-sm p-4 rounded-xl border border-purple-500/30 transform transition-all duration-300 hover:scale-110 hover:-translate-y-2">
-        <div className="text-3xl mb-2">{icon}</div>
-        <p className="text-sm font-semibold text-gray-200">{text}</p>
+      <div className="absolute inset-0 rounded-xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300 bg-gradient-to-r from-[#FF9933] to-[#FFD700]"></div>
+      <div className="relative backdrop-blur-sm p-4 rounded-xl border-2 shadow-lg transform transition-all duration-300 hover:scale-110 hover:-translate-y-2 bg-white border-indigo">
+        <div className="text-3xl mb-2 marigold-orange">{icon}</div>
+        <p className="text-sm font-semibold text-gray-800">{text}</p>
       </div>
     </div>
   );
@@ -923,13 +976,13 @@ function Feature3D({ icon, text }) {
 function FeatureCard({ icon, title, desc }) {
   return (
     <div className="group relative h-[218px]">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 "></div>
-      <div className="relative h-full bg-gradient-to-br from-slate-900/80 to-purple-900/80 backdrop-blur-xl p-8 rounded-2xl border border-purple-500/30 transform transition-all duration-500 hover:scale-105 hover:-translate-y-4">
-        <div className="text-purple-400 mb-4 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#FF9933] to-[#303F9F]"></div>
+      <div className="relative h-full backdrop-blur-xl p-8 rounded-2xl border-2 shadow-xl transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 bg-white border-marigold">
+        <div className="mb-4 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 marigold-orange">
           {icon}
         </div>
-        <h3 className="text-2xl font-bold mb-3 text-white">{title}</h3>
-        <p className="text-gray-300 leading-relaxed">{desc}</p>
+        <h3 className="text-2xl font-bold mb-3 royal-indigo">{title}</h3>
+        <p className="text-gray-700 leading-relaxed">{desc}</p>
       </div>
     </div>
   );
@@ -938,13 +991,13 @@ function FeatureCard({ icon, title, desc }) {
 function BenefitCard({ icon, title, desc }) {
   return (
     <div className="group relative h-[250px]">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
-      <div className="relative h-full bg-gradient-to-br from-slate-900/80 to-pink-900/80 backdrop-blur-xl p-8 rounded-2xl border border-pink-500/30 transform transition-all duration-500 hover:scale-105 hover:-translate-y-4">
-        <div className="text-pink-400 mb-4 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#303F9F] to-[#FFD700]"></div>
+      <div className="relative h-full backdrop-blur-xl p-8 rounded-2xl border-2 shadow-xl transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 bg-white border-indigo">
+        <div className="mb-4 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 royal-indigo">
           {icon}
         </div>
-        <h3 className="text-2xl font-bold mb-3 text-white">{title}</h3>
-        <p className="text-gray-300 leading-relaxed">{desc}</p>
+        <h3 className="text-2xl font-bold mb-3 marigold-orange">{title}</h3>
+        <p className="text-gray-700 leading-relaxed">{desc}</p>
       </div>
     </div>
   );
@@ -953,26 +1006,27 @@ function BenefitCard({ icon, title, desc }) {
 function TestimonialCard({ name, role, rating, review }) {
   return (
     <div className="group relative h-[252px]">
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
-      <div className="relative h-full bg-gradient-to-br from-slate-900/80 to-purple-900/80 backdrop-blur-xl p-8 rounded-2xl border border-purple-500/30 transform transition-all duration-500 hover:scale-105">
+      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#FF9933] to-[#FFD700]"></div>
+      <div className="relative h-full backdrop-blur-xl p-8 rounded-2xl border-2 shadow-xl transform transition-all duration-500 hover:scale-105 bg-white border-marigold">
         <div className="flex items-center gap-2 mb-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} size={20} className="fill-yellow-400 text-yellow-400" />
+            <Star key={i} size={20} className="fill-[#FFD700] text-[#FFD700]" />
           ))}
         </div>
 
-        <p className="text-gray-300 mb-6 italic leading-relaxed">"{review}"</p>
+        <p className="text-gray-700 mb-6 italic leading-relaxed">"{review}"</p>
 
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-2xl">
-            <img src="https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png" alt="" />
+          <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl bg-gradient-to-r from-[#FF9933] to-[#FFD700]">
+            👤
           </div>
           <div>
-            <p className="font-bold text-white">{name}</p>
-            <p className="text-sm text-purple-300">{role}</p>
+            <p className="font-bold text-gray-900">{name}</p>
+            <p className="text-sm royal-indigo">{role}</p>
           </div>
         </div>
       </div>
+
     </div>
   );
 }
