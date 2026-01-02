@@ -575,21 +575,20 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Mic, ShieldCheck, Sparkles, BookOpen, Brain, Leaf, MessageCircle, Palette, Heart, Star } from 'lucide-react';
 
-export  function HomePage() {
+export function HomePage() {
   const [currentLang, setCurrentLang] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const canvasRef = useRef(null);
   const [scrollY, setScrollY] = useState(0);
 
-  /* Scroll */
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  /* Typing */
+
   const languages = [
     { text: 'Hindi' },
     { text: 'Tamil' },
@@ -655,7 +654,7 @@ export  function HomePage() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    /* ---------------- TEXT SPRITE FUNCTION ---------------- */
+
     function createTextSprite(text, color) {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
@@ -664,13 +663,22 @@ export  function HomePage() {
       canvas.height = 512;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = "bold 140px Arial";
-      ctx.fillStyle = color;
+      ctx.font = "bold 160px Arial"; // slightly bigger
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      
 
+      // Add shadow for floating effect
+      ctx.shadowColor = "rgba(0,0,0,0.5)";
+      ctx.shadowBlur = 20;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+
+      // Fill and stroke for contrast
+      ctx.fillStyle = color;
       ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = "#000000";
+      ctx.strokeText(text, canvas.width / 2, canvas.height / 2);
 
       const texture = new THREE.CanvasTexture(canvas);
       texture.needsUpdate = true;
@@ -682,28 +690,26 @@ export  function HomePage() {
       });
 
       const sprite = new THREE.Sprite(material);
-      sprite.scale.set(6, 6, 1); // 🔥 BIGGER SCALE
+      sprite.scale.set(6, 6, 1); // make letters slightly bigger
 
       return sprite;
     }
 
-    /* ---------------- LETTERS ---------------- */
     const letters = [
-      { text: "अ", color: "#FF9933" },
-      { text: "क", color: "#FFD700" },
-      { text: "தமிழ்", color: "#303F9F" },
-      { text: "அ", color: "#FF5722" },
-      { text: "বাংলা", color: "#4CAF50" },
-      { text: "हिंदी", color: "#9C27B0" },
+      { text: "अ", color: "#FF6F00" },        // deep orange
+      { text: "क", color: "#FF8F00" },        // darker gold
+      { text: "தமிழ்", color: "#0D1B7F" },   // very deep navy
+      { text: "அ", color: "#D84315" },        // strong red-orange
+      { text: "বাংলা", color: "#1B5E20" },    // forest green
+      { text: "हिंदी", color: "#4A148C" },    // deep purple
     ];
 
     const sprites = letters.map((item) => {
       const sprite = createTextSprite(item.text, item.color);
 
-      // Full screen width (-window.innerWidth/100 to +window.innerWidth/100)
       sprite.position.set(
-        (Math.random() - 0.5) * 16, // 🔥 wider spread horizontally
-        (Math.random() - 0.5) * 8,  // 🔥 vertical spread
+        (Math.random() - 0.5) * 16,
+        (Math.random() - 0.5) * 8,
         -2
       );
 
@@ -711,7 +717,6 @@ export  function HomePage() {
       return sprite;
     });
 
-    /* ---------------- LIGHT ---------------- */
     scene.add(new THREE.AmbientLight(0xffffff, 2));
 
     let animationId;
@@ -723,7 +728,7 @@ export  function HomePage() {
 
         if (sprite.position.y > 5) {
           sprite.position.y = -5;
-          sprite.position.x = (Math.random() - 0.5) * 16; // random X again
+          sprite.position.x = (Math.random() - 0.5) * 16;
         }
       });
 
