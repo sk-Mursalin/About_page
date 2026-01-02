@@ -571,27 +571,29 @@
 //     </motion.div>
 //   );
 // }
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Mic, ShieldCheck, Sparkles, BookOpen, Brain, Leaf, MessageCircle, Palette, Heart, Star } from 'lucide-react';
 
-export default function HomePage() {
+export  function HomePage() {
   const [currentLang, setCurrentLang] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const canvasRef = useRef(null);
   const [scrollY, setScrollY] = useState(0);
 
+  /* Scroll */
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  /* Typing */
   const languages = [
-    { text: 'Hindi', lang: 'Hindi' },
-    { text: 'Tamil', lang: 'Tamil' },
-    { text: 'Bengali', lang: 'Bengali' }
+    { text: 'Hindi' },
+    { text: 'Tamil' },
+    { text: 'Bengali' }
   ];
 
   useEffect(() => {
@@ -616,80 +618,114 @@ export default function HomePage() {
     return () => clearTimeout(timeout);
   }, [displayText, isDeleting, currentLang]);
 
+  /* Scroll animations */
   useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
-    };
+    const observer = new IntersectionObserver(
+      entries =>
+        entries.forEach(e =>
+          e.target.classList.toggle('animate-in', e.isIntersecting)
+        ),
+      { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+    );
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-in');
-        } else {
-          entry.target.classList.remove('animate-in');
-        }
-      });
-    }, observerOptions);
-
-    const elements = document.querySelectorAll('.scroll-animate');
-    elements.forEach(el => observer.observe(el));
-
+    document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
+  /* 🌐 THREE.JS */
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, alpha: true, antialias: true });
+
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.z = 8;
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
+      alpha: true,
+      antialias: true,
+    });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.position.z = 5;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    const geometry1 = new THREE.IcosahedronGeometry(1, 0);
-    const geometry2 = new THREE.TorusGeometry(0.7, 0.3, 16, 100);
-    const geometry3 = new THREE.OctahedronGeometry(0.8);
+    /* ---------------- TEXT SPRITE FUNCTION ---------------- */
+    function createTextSprite(text, color) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
-    const material1 = new THREE.MeshPhongMaterial({ color: 0xFF9933, wireframe: true });
-    const material2 = new THREE.MeshPhongMaterial({ color: 0x303F9F, wireframe: true });
-    const material3 = new THREE.MeshPhongMaterial({ color: 0xFFD700, wireframe: true });
+      canvas.width = 512;
+      canvas.height = 512;
 
-    const mesh1 = new THREE.Mesh(geometry1, material1);
-    const mesh2 = new THREE.Mesh(geometry2, material2);
-    const mesh3 = new THREE.Mesh(geometry3, material3);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = "bold 140px Arial";
+      ctx.fillStyle = color;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      
 
-    mesh1.position.set(-3, 2, 0);
-    mesh2.position.set(3, -1, 0);
-    mesh3.position.set(0, -2, -1);
+      ctx.fillText(text, canvas.width / 2, canvas.height / 2);
 
-    scene.add(mesh1, mesh2, mesh3);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
 
-    const light1 = new THREE.DirectionalLight(0xffffff, 1);
-    light1.position.set(5, 5, 5);
-    scene.add(light1);
+      const material = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 1,
+      });
 
-    const light2 = new THREE.AmbientLight(0x404040, 2);
-    scene.add(light2);
+      const sprite = new THREE.Sprite(material);
+      sprite.scale.set(6, 6, 1); // 🔥 BIGGER SCALE
+
+      return sprite;
+    }
+
+    /* ---------------- LETTERS ---------------- */
+    const letters = [
+      { text: "अ", color: "#FF9933" },
+      { text: "क", color: "#FFD700" },
+      { text: "தமிழ்", color: "#303F9F" },
+      { text: "அ", color: "#FF5722" },
+      { text: "বাংলা", color: "#4CAF50" },
+      { text: "हिंदी", color: "#9C27B0" },
+    ];
+
+    const sprites = letters.map((item) => {
+      const sprite = createTextSprite(item.text, item.color);
+
+      // Full screen width (-window.innerWidth/100 to +window.innerWidth/100)
+      sprite.position.set(
+        (Math.random() - 0.5) * 16, // 🔥 wider spread horizontally
+        (Math.random() - 0.5) * 8,  // 🔥 vertical spread
+        -2
+      );
+
+      scene.add(sprite);
+      return sprite;
+    });
+
+    /* ---------------- LIGHT ---------------- */
+    scene.add(new THREE.AmbientLight(0xffffff, 2));
 
     let animationId;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      mesh1.rotation.x += 0.005;
-      mesh1.rotation.y += 0.01;
+      sprites.forEach((sprite, i) => {
+        sprite.position.y += 0.002 + i * 0.0005;
 
-      mesh2.rotation.x += 0.003;
-      mesh2.rotation.y += 0.008;
-
-      mesh3.rotation.x += 0.007;
-      mesh3.rotation.y += 0.005;
-
-      const scrollFactor = scrollY * 0.001;
-      mesh1.position.y = 2 - scrollFactor;
-      mesh2.position.y = -1 + scrollFactor * 0.5;
-      mesh3.position.y = -2 + scrollFactor * 0.3;
+        if (sprite.position.y > 5) {
+          sprite.position.y = -5;
+          sprite.position.x = (Math.random() - 0.5) * 16; // random X again
+        }
+      });
 
       renderer.render(scene, camera);
     };
@@ -702,17 +738,17 @@ export default function HomePage() {
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationId);
       renderer.dispose();
     };
-  }, [scrollY]);
+  }, []);
 
   return (
-    <div className="relative bg-gradient-to-b from-amber-50 via-orange-50 to-yellow-50 text-gray-900 overflow-x-hidden">
+    <div className="relative bg-white text-gray-900 overflow-x-hidden">
       <style>{`
         .scroll-animate {
           opacity: 0;
@@ -740,7 +776,7 @@ export default function HomePage() {
       `}</style>
 
       <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-30" />
-      
+
       {/* HERO SECTION */}
       <section className="relative min-h-screen flex items-center justify-center px-6 py-20">
         <div className="max-w-7xl mx-auto text-center z-10">

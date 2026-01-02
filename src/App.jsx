@@ -1,6 +1,8 @@
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import HomePage from './pages/Home'
+import { HomePage2 } from './pages/HomeDemo'
+import { HomePage } from './pages/Home'
+
 
 
 
