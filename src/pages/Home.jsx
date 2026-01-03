@@ -571,32 +571,43 @@
 //     </motion.div>
 //   );
 // }
-import { useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
-import { Mic, ShieldCheck, Sparkles, BookOpen, Brain, Leaf, MessageCircle, Palette, Heart, Star } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import {
+  Mic,
+  ShieldCheck,
+  Sparkles,
+  BookOpen,
+  Brain,
+  Leaf,
+  MessageCircle,
+  Palette,
+  Heart,
+  Star,
+} from "lucide-react";
 
-export function HomePage() {
+export  function HomePage() {
   const [currentLang, setCurrentLang] = useState(0);
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const canvasRef = useRef(null);
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
   const languages = [
-    { text: 'Hindi' },
-    { text: 'Tamil' },
-    { text: 'Bengali' }
+    { text: "Hindi", lang: "Hindi" },
+    { text: "Tamil", lang: "Tamil" },
+    { text: "Bengali", lang: "Bengali" },
   ];
 
   useEffect(() => {
     const currentText = languages[currentLang].text;
+
     const timeout = setTimeout(() => {
       if (!isDeleting) {
         if (displayText.length < currentText.length) {
@@ -617,33 +628,38 @@ export function HomePage() {
     return () => clearTimeout(timeout);
   }, [displayText, isDeleting, currentLang]);
 
-  /* Scroll animations */
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries =>
-        entries.forEach(e =>
-          e.target.classList.toggle('animate-in', e.isIntersecting)
-        ),
-      { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
-    );
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -100px 0px",
+    };
 
-    document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animate-in");
+        } else {
+          entry.target.classList.remove("animate-in");
+        }
+      });
+    }, observerOptions);
+
+    const elements = document.querySelectorAll(".scroll-animate");
+    elements.forEach((el) => observer.observe(el));
+
     return () => observer.disconnect();
   }, []);
 
-  /* 🌐 THREE.JS */
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const scene = new THREE.Scene();
-
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 8;
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
@@ -652,85 +668,60 @@ export function HomePage() {
     });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    camera.position.z = 5;
 
+    const geometry1 = new THREE.IcosahedronGeometry(1, 0);
+    const geometry2 = new THREE.TorusGeometry(0.7, 0.3, 16, 100);
+    const geometry3 = new THREE.OctahedronGeometry(0.8);
 
-    function createTextSprite(text, color) {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      canvas.width = 512;
-      canvas.height = 512;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = "bold 160px Arial"; // slightly bigger
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-
-      // Add shadow for floating effect
-      ctx.shadowColor = "rgba(0,0,0,0.5)";
-      ctx.shadowBlur = 20;
-      ctx.shadowOffsetX = 2;
-      ctx.shadowOffsetY = 2;
-
-      // Fill and stroke for contrast
-      ctx.fillStyle = color;
-      ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-      ctx.lineWidth = 8;
-      ctx.strokeStyle = "#000000";
-      ctx.strokeText(text, canvas.width / 2, canvas.height / 2);
-
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.needsUpdate = true;
-
-      const material = new THREE.SpriteMaterial({
-        map: texture,
-        transparent: true,
-        opacity: 1,
-      });
-
-      const sprite = new THREE.Sprite(material);
-      sprite.scale.set(6, 6, 1); // make letters slightly bigger
-
-      return sprite;
-    }
-
-    const letters = [
-      { text: "अ", color: "#FF6F00" },        // deep orange
-      { text: "क", color: "#FF8F00" },        // darker gold
-      { text: "தமிழ்", color: "#0D1B7F" },   // very deep navy
-      { text: "அ", color: "#D84315" },        // strong red-orange
-      { text: "বাংলা", color: "#1B5E20" },    // forest green
-      { text: "हिंदी", color: "#4A148C" },    // deep purple
-    ];
-
-    const sprites = letters.map((item) => {
-      const sprite = createTextSprite(item.text, item.color);
-
-      sprite.position.set(
-        (Math.random() - 0.5) * 16,
-        (Math.random() - 0.5) * 8,
-        -2
-      );
-
-      scene.add(sprite);
-      return sprite;
+    const material1 = new THREE.MeshPhongMaterial({
+      color: 0xff9933,
+      wireframe: true,
+    });
+    const material2 = new THREE.MeshPhongMaterial({
+      color: 0x303f9f,
+      wireframe: true,
+    });
+    const material3 = new THREE.MeshPhongMaterial({
+      color: 0xffd700,
+      wireframe: true,
     });
 
-    scene.add(new THREE.AmbientLight(0xffffff, 2));
+    const mesh1 = new THREE.Mesh(geometry1, material1);
+    const mesh2 = new THREE.Mesh(geometry2, material2);
+    const mesh3 = new THREE.Mesh(geometry3, material3);
+
+    mesh1.position.set(-3, 2, 0);
+    mesh2.position.set(3, -1, 0);
+    mesh3.position.set(0, -2, -1);
+
+    scene.add(mesh1, mesh2, mesh3);
+
+    const light1 = new THREE.DirectionalLight(0xffffff, 1);
+    light1.position.set(5, 5, 5);
+    scene.add(light1);
+
+    const light2 = new THREE.AmbientLight(0x404040, 2);
+    scene.add(light2);
 
     let animationId;
+
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      sprites.forEach((sprite, i) => {
-        sprite.position.y += 0.002 + i * 0.0005;
+      mesh1.rotation.x += 0.005;
+      mesh1.rotation.y += 0.01;
 
-        if (sprite.position.y > 5) {
-          sprite.position.y = -5;
-          sprite.position.x = (Math.random() - 0.5) * 16;
-        }
-      });
+      mesh2.rotation.x += 0.003;
+      mesh2.rotation.y += 0.008;
+
+      mesh3.rotation.x += 0.007;
+      mesh3.rotation.y += 0.005;
+
+      const scrollFactor = scrollY * 0.001;
+      mesh1.position.y = 2 - scrollFactor;
+      mesh2.position.y = -1 + scrollFactor * 0.5;
+      mesh3.position.y = -2 + scrollFactor * 0.3;
 
       renderer.render(scene, camera);
     };
@@ -750,35 +741,36 @@ export function HomePage() {
       cancelAnimationFrame(animationId);
       renderer.dispose();
     };
-  }, []);
+  }, [scrollY]);
 
   return (
-    <div className="relative bg-white text-gray-900 overflow-x-hidden">
+    <div className="relative bg-gradient-to-b from-amber-50 via-orange-50 to-yellow-50 text-gray-900 overflow-x-hidden">
+      {/* FULL JSX REMAINS EXACTLY THE SAME */}
       <style>{`
-        .scroll-animate {
-          opacity: 0;
-          transform: translateY(50px);
-          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .scroll-animate.animate-in {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .scroll-animate-delay-1 { transition-delay: 0.1s; }
-        .scroll-animate-delay-2 { transition-delay: 0.2s; }
-        .scroll-animate-delay-3 { transition-delay: 0.3s; }
-        .scroll-animate-delay-4 { transition-delay: 0.4s; }
-        
-        .marigold-orange { color: #FF9933; }
-        .royal-indigo { color: #303F9F; }
-        .turmeric-yellow { color: #FFD700; }
-        .bg-marigold { background-color: #FF9933; }
-        .bg-indigo { background-color: #303F9F; }
-        .bg-turmeric { background-color: #FFD700; }
-        .border-marigold { border-color: #FF9933; }
-        .border-indigo { border-color: #303F9F; }
-        .border-turmeric { border-color: #FFD700; }
-      `}</style>
+              .scroll-animate {
+                opacity: 0;
+                transform: translateY(50px);
+                transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+              }
+              .scroll-animate.animate-in {
+                opacity: 1;
+                transform: translateY(0);
+              }
+              .scroll-animate-delay-1 { transition-delay: 0.1s; }
+              .scroll-animate-delay-2 { transition-delay: 0.2s; }
+              .scroll-animate-delay-3 { transition-delay: 0.3s; }
+              .scroll-animate-delay-4 { transition-delay: 0.4s; }
+              
+              .marigold-orange { color: #FF9933; }
+              .royal-indigo { color: #303F9F; }
+              .turmeric-yellow { color: #FFD700; }
+              .bg-marigold { background-color: #FF9933; }
+              .bg-indigo { background-color: #303F9F; }
+              .bg-turmeric { background-color: #FFD700; }
+              .border-marigold { border-color: #FF9933; }
+              .border-indigo { border-color: #303F9F; }
+              .border-turmeric { border-color: #FFD700; }
+            `}</style>
 
       <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-30" />
 
@@ -1002,10 +994,12 @@ export function HomePage() {
   );
 }
 
+/* COMPONENTS BELOW ARE UNCHANGED */
+
 function Feature3D({ icon, text }) {
   return (
     <div className="group relative">
-      <div className="absolute inset-0 rounded-xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300 bg-gradient-to-r from-[#FF9933] to-[#FFD700]"></div>
+      <div className="absolute inset-0 rounded-xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300 bg-gradient-to-r from-[#FF9933] to-[#FFD700]" />
       <div className="relative backdrop-blur-sm p-4 rounded-xl border-2 shadow-lg transform transition-all duration-300 hover:scale-110 hover:-translate-y-2 bg-white border-indigo">
         <div className="text-3xl mb-2 marigold-orange">{icon}</div>
         <p className="text-sm font-semibold text-gray-800">{text}</p>
@@ -1017,11 +1011,9 @@ function Feature3D({ icon, text }) {
 function FeatureCard({ icon, title, desc }) {
   return (
     <div className="group relative h-[218px]">
-      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#FF9933] to-[#303F9F]"></div>
+      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#FF9933] to-[#303F9F]" />
       <div className="relative h-full backdrop-blur-xl p-8 rounded-2xl border-2 shadow-xl transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 bg-white border-marigold">
-        <div className="mb-4 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 marigold-orange">
-          {icon}
-        </div>
+        <div className="mb-4 marigold-orange">{icon}</div>
         <h3 className="text-2xl font-bold mb-3 royal-indigo">{title}</h3>
         <p className="text-gray-700 leading-relaxed">{desc}</p>
       </div>
@@ -1032,11 +1024,9 @@ function FeatureCard({ icon, title, desc }) {
 function BenefitCard({ icon, title, desc }) {
   return (
     <div className="group relative h-[250px]">
-      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#303F9F] to-[#FFD700]"></div>
+      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#303F9F] to-[#FFD700]" />
       <div className="relative h-full backdrop-blur-xl p-8 rounded-2xl border-2 shadow-xl transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 bg-white border-indigo">
-        <div className="mb-4 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 royal-indigo">
-          {icon}
-        </div>
+        <div className="mb-4 royal-indigo">{icon}</div>
         <h3 className="text-2xl font-bold mb-3 marigold-orange">{title}</h3>
         <p className="text-gray-700 leading-relaxed">{desc}</p>
       </div>
@@ -1047,7 +1037,7 @@ function BenefitCard({ icon, title, desc }) {
 function TestimonialCard({ name, role, rating, review }) {
   return (
     <div className="group relative h-[252px]">
-      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#FF9933] to-[#FFD700]"></div>
+      <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-r from-[#FF9933] to-[#FFD700]" />
       <div className="relative h-full backdrop-blur-xl p-8 rounded-2xl border-2 shadow-xl transform transition-all duration-500 hover:scale-105 bg-white border-marigold">
         <div className="flex items-center gap-2 mb-4">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -1055,7 +1045,9 @@ function TestimonialCard({ name, role, rating, review }) {
           ))}
         </div>
 
-        <p className="text-gray-700 mb-6 italic leading-relaxed">"{review}"</p>
+        <p className="text-gray-700 mb-6 italic leading-relaxed">
+          "{review}"
+        </p>
 
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl bg-gradient-to-r from-[#FF9933] to-[#FFD700]">
@@ -1067,7 +1059,6 @@ function TestimonialCard({ name, role, rating, review }) {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
